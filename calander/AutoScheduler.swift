@@ -6,14 +6,14 @@ struct AutoScheduler {
         let startOfDay = calendar.startOfDay(for: day)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!.addingTimeInterval(-1)
 
-        // Working window
+//main window
         let start = calendar.date(bySettingHour: workdayStart.hour ?? 9, minute: workdayStart.minute ?? 0, second: 0, of: startOfDay) ?? startOfDay
         let end = calendar.date(bySettingHour: workdayEnd.hour ?? 17, minute: workdayEnd.minute ?? 0, second: 0, of: startOfDay) ?? endOfDay
         let workingStart = max(start, startOfDay)
         let workingEnd = min(end, endOfDay)
         guard workingStart < workingEnd else { return [] }
 
-        // Existing blocks overlapping the window
+//overlapping thingies
         var existing: [FocusBlock] = []
         do {
             let descriptor = FetchDescriptor<FocusBlock>()
@@ -23,7 +23,7 @@ struct AutoScheduler {
             existing = []
         }
 
-        // Slot construction
+
         let slotSeconds: TimeInterval = TimeInterval(slot * 60)
         var cursor = workingStart
         var slots: [(Date, Date)] = []
@@ -34,7 +34,7 @@ struct AutoScheduler {
             cursor = next
         }
 
-        // Sort tasks deterministically
+// sorting stuff
         let sortedTasks: [TaskItem] = tasks.sorted(by: { (lhs: TaskItem, rhs: TaskItem) -> Bool in
             if lhs.isCompleted != rhs.isCompleted { return !lhs.isCompleted }
             if lhs.isOverdue != rhs.isOverdue { return lhs.isOverdue }

@@ -16,7 +16,7 @@ struct SmartCalendarView: View {
     @State private var displayedMonth: Date = Date()
     @State private var selectedDate: Date = Calendar.current.startOfDay(for: Date())
 
-    // MARK: - Search
+//search bar
     enum SearchScope: String, CaseIterable, Identifiable {
         case all = "All"
         case tasks = "Tasks"
@@ -65,7 +65,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Header (Month and navigation)
+//header
     private var header: some View {
         HStack(alignment: .center) {
             Button { shiftMonth(-1) } label: {
@@ -88,7 +88,7 @@ struct SmartCalendarView: View {
         .padding(.horizontal, 4)
     }
 
-    // MARK: - Weekday header
+//header2
     private var weekdayHeader: some View {
         let symbols = calendar.shortWeekdaySymbols
         let shifted = shiftWeekdaySymbols(symbols, firstWeekday: calendar.firstWeekday)
@@ -103,7 +103,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Month grid with heatmap
+//grid
     private var monthGrid: some View {
         let days = daysForMonthGrid(containing: displayedMonth)
         let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
@@ -125,7 +125,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Day Detail
+
     private var dayDetail: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -136,7 +136,6 @@ struct SmartCalendarView: View {
                     .buttonStyle(.borderedProminent)
             }
 
-            // Existing blocks (events) for the selected date
             if searchScope != .tasks {
                 let dayBlocks = filteredBlocksForDay(selectedDate)
                 if dayBlocks.isEmpty {
@@ -150,7 +149,7 @@ struct SmartCalendarView: View {
                 Divider().padding(.vertical, 4)
             }
 
-            // Tasks targeting this date or due today
+//targeting
             if searchScope != .events {
                 let dayTasks = filteredTasksForDay(selectedDate)
                 if dayTasks.isEmpty {
@@ -167,7 +166,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Toolbar
+//toolbar
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup(placement: .topBarTrailing) {
@@ -193,7 +192,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Helpers: Calendar layout
+//layout
     private func monthYearString(for date: Date) -> String {
         let df = DateFormatter()
         df.calendar = calendar
@@ -247,7 +246,7 @@ struct SmartCalendarView: View {
         return days
     }
 
-    // MARK: - Heatmap
+//heatmap
     private func heatForDay(_ day: Date) -> Double {
         // Normalize to [0, 1] by mapping total scheduled minutes in day to 0..1 across 0..480 minutes (8h)
         let total = blocksForDay(day).reduce(0) { $0 + $1.durationMinutes }
@@ -276,7 +275,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Search & Filtering
+//filtering :<
     private var isSearching: Bool {
         !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -305,7 +304,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Theming
+//themes cuz we were forced to ;-;
     private func randomizeThemeColor() {
         let palette: [Color] = [.pink, .orange, .mint, .teal, .indigo, .purple, .cyan, .red]
         if let pick = palette.randomElement() {
@@ -313,7 +312,7 @@ struct SmartCalendarView: View {
         }
     }
 
-    // MARK: - Actions
+//actions
     private func shiftMonth(_ delta: Int) { displayedMonth = calendar.date(byAdding: .month, value: delta, to: displayedMonth) ?? displayedMonth }
     private func jumpToToday() { selectedDate = calendar.startOfDay(for: Date()); displayedMonth = Date() }
 
@@ -330,7 +329,6 @@ struct SmartCalendarView: View {
     }
 
     private func seedDemoData() throws {
-        // Add some demo tasks if none exist
         if tasks.isEmpty {
             let today = calendar.startOfDay(for: Date())
             let samples: [TaskItem] = [
@@ -345,7 +343,7 @@ struct SmartCalendarView: View {
     }
 }
 
-// MARK: - Day Cell with heat and selection
+
 private struct DayCell: View {
     let date: Date
     let isInDisplayedMonth: Bool
@@ -398,7 +396,7 @@ private struct DayCell: View {
     }
 }
 
-// MARK: - Rows
+//rows
 private struct TaskRow: View {
     @Environment(\.modelContext) private var context
     @Bindable var task: TaskItem
@@ -467,7 +465,7 @@ private struct FocusBlockRow: View {
     }
 }
 
-// MARK: - Add Task
+//adding of the tasks
 private struct AddTaskRow: View {
     @Environment(\.modelContext) private var context
     @State private var title: String = ""

@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct calanderApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SmartCalendarView()
         }
+        .modelContainer(for: [TaskItem.self, FocusBlock.self, FeedbackItem.self])
     }
 }
